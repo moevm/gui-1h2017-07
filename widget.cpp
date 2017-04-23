@@ -190,7 +190,6 @@ void Widget::CreateBlock(int block[4][4],int block_id)
 
 void Widget::GetBorder(int block[4][4],Border &border)
 {
-    //
     for(int i=0;i<4;i++)
         for(int j=0;j<4;j++)
             if(block[i][j]==1)
