@@ -30,7 +30,7 @@ struct block_point
 {
     int pos_x;
     int pos_y;
-        block_point(int x,int y):pos_x(x),pos_y(y){}
+    //    block_point(int x,int y):pos_x(x),pos_y(y){}
 };
 
 namespace Ui {
