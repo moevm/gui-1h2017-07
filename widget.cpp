@@ -127,8 +127,9 @@ void Widget::paintEvent(QPaintEvent *event)
 void Widget::timerEvent(QTimerEvent *event)
 {
 
-    if(event->timerId()==game_timer)
+    if(event->timerId()==game_timer){
         BlockMove(DOWN);
+    }
 
     if(event->timerId()==paint_timer)
         update();
@@ -136,6 +137,7 @@ void Widget::timerEvent(QTimerEvent *event)
 
 void Widget::keyPressEvent(QKeyEvent *event)
 {
+
     switch(event->key())
     {
     case Qt::Key_Up:
@@ -226,7 +228,7 @@ void Widget::InitGame()
     for(int i=0;i<AREA_ROW;i++)
         for(int j=0;j<AREA_COL;j++)
             game_area[i][j]=0;
-
+    gameTimerAcceleration = 1;
     speed_ms=800;
     refresh_ms=30;
 
@@ -255,6 +257,15 @@ void Widget::ResetBlock()
     start_point.pos_x=AREA_COL/2-2;
     start_point.pos_y=0;
     block_pos=start_point;
+
+    fullLineOperator();
+    if(gameTimerAcceleration < 100){
+        gameTimerAcceleration++;
+        killTimer(game_timer);
+        speed_ms = 50 + 800.0/gameTimerAcceleration;
+        game_timer=startTimer(speed_ms);
+    }
+
 }
 
 void Widget::StartGame()
@@ -272,7 +283,17 @@ void Widget::GameOver()
 
     killTimer(game_timer);
     killTimer(paint_timer);
-    QMessageBox::information(this,"failed","game over");
+    switch(QMessageBox::information(this,"failed","Game over. Do You want to begin a new game?",QMessageBox::Yes,QMessageBox::No)){
+    case QMessageBox::Yes:
+        qDebug("yes");
+        InitGame();
+        break;
+    case QMessageBox::No:
+        qDebug("no");
+        break;
+    default:
+        break;
+    }
 
 }
 
@@ -419,6 +440,15 @@ void Widget::BlockMove(Direction dir)
         break;
     }
 
+
+
+
+    for(int j=0;j<AREA_COL;j++)
+        if(game_area[0][j]==2)
+            GameOver();
+}
+
+void Widget::fullLineOperator(){
     int i=AREA_ROW-1;
     int line_count=0;
     while(i>=1)
@@ -440,8 +470,4 @@ void Widget::BlockMove(Direction dir)
         }
     }
     score+=line_count*10;
-
-    for(int j=0;j<AREA_COL;j++)
-        if(game_area[0][j]==2)
-            GameOver();
 }

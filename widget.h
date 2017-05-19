@@ -53,6 +53,7 @@ public:
     void GetBorder(int block[4][4],Border &border);
     void ConvertStable(int x,int y);
     bool IsCollide(int x,int y,Direction dir); //есть ли коллизия
+    void fullLineOperator(); //Если найдена заполненная строка, она удаляется
 
 public:
     explicit Widget(QWidget *parent = 0);
@@ -77,6 +78,7 @@ private:
     int paint_timer;
     int speed_ms;
     int refresh_ms;
+    int gameTimerAcceleration;
 };
 
 #endif // WIDGET_H
