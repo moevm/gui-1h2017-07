@@ -262,7 +262,7 @@ void Widget::ResetBlock()
     if(gameTimerAcceleration < 100){
         gameTimerAcceleration++;
         killTimer(game_timer);
-        speed_ms = 50 + 800.0/gameTimerAcceleration;
+        speed_ms = 800 - 8 * gameTimerAcceleration;
         game_timer=startTimer(speed_ms);
     }
 
@@ -355,12 +355,17 @@ void Widget::BlockMove(Direction dir)
     case UP:
         if(IsCollide(block_pos.pos_x,block_pos.pos_y,UP))
             break;
-
+        if(block_pos.pos_y >= AREA_ROW-3) break;
         BlockRotate(cur_block);
 
         for(int i=0;i<4;i++)
             for(int j=0;j<4;j++)
-                game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
+            {
+                if(game_area[block_pos.pos_y+i][block_pos.pos_x+j] != 2){
+                    game_area[block_pos.pos_y+i][block_pos.pos_x+j] = cur_block[i][j];
+                }
+
+            }
 
         GetBorder(cur_block,cur_border);
         break;
@@ -397,7 +402,8 @@ void Widget::BlockMove(Direction dir)
             break;
 
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
-            game_area[block_pos.pos_y+i][block_pos.pos_x+3]=0;
+            if(game_area[block_pos.pos_y+i][block_pos.pos_x+3]!=2)
+                game_area[block_pos.pos_y+i][block_pos.pos_x+3]=0;
         block_pos.pos_x-=1;
 
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
@@ -410,7 +416,8 @@ void Widget::BlockMove(Direction dir)
             break;
 
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
-            game_area[block_pos.pos_y+i][block_pos.pos_x]=0;
+            if(game_area[block_pos.pos_y+i][block_pos.pos_x]!=2)
+                game_area[block_pos.pos_y+i][block_pos.pos_x]=0;
         block_pos.pos_x+=1;
 
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
