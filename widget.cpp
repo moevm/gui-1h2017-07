@@ -262,7 +262,7 @@ void Widget::ResetBlock()
     if(gameTimerAcceleration < 100){
         gameTimerAcceleration++;
         killTimer(game_timer);
-        speed_ms = 800 - 8 * gameTimerAcceleration;
+        speed_ms = 900 - 8 * gameTimerAcceleration;
         game_timer=startTimer(speed_ms);
     }
 
